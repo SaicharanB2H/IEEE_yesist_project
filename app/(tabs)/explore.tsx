@@ -1,5 +1,6 @@
 import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { router } from 'expo-router';
+import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
@@ -21,9 +22,27 @@ export default function TabTwoScreen() {
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
+        <ThemedText type="title">Settings & Tools</ThemedText>
       </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
+      
+      {/* Premium UI Showcase Link */}
+      <TouchableOpacity 
+        style={styles.showcaseButton}
+        onPress={() => router.push('/design-showcase')}
+      >
+        <ThemedView style={styles.showcaseCard}>
+          <IconSymbol size={24} color="#007AFF" name="paintbrush" />
+          <ThemedView style={styles.showcaseText}>
+            <ThemedText type="headline">Premium UI Showcase</ThemedText>
+            <ThemedText type="body" style={styles.showcaseSubtext}>
+              View all premium components and design system
+            </ThemedText>
+          </ThemedView>
+          <IconSymbol size={16} color="#007AFF" name="chevron.right" />
+        </ThemedView>
+      </TouchableOpacity>
+      
+      <ThemedText>This app includes premium UI components following Apple and Samsung design standards.</ThemedText>
       <Collapsible title="File-based routing">
         <ThemedText>
           This app has two screens:{' '}
@@ -106,5 +125,26 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     gap: 8,
+  },
+  showcaseButton: {
+    marginBottom: 16,
+  },
+  showcaseCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 12,
+    backgroundColor: 'rgba(0, 122, 255, 0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(0, 122, 255, 0.2)',
+  },
+  showcaseText: {
+    flex: 1,
+    marginLeft: 12,
+    backgroundColor: 'transparent',
+  },
+  showcaseSubtext: {
+    opacity: 0.7,
+    marginTop: 2,
   },
 });

@@ -161,7 +161,7 @@ export const generateColor = (seed: string): string => {
 
 export const sortDevicesByStatus = (devices: any[]): any[] => {
   const statusOrder = { on: 0, idle: 1, off: 2 };
-  return devices.sort((a, b) => statusOrder[a.status] - statusOrder[b.status]);
+  return devices.sort((a, b) => (statusOrder[a.status] ?? 3) - (statusOrder[b.status] ?? 3));
 };
 
 export const groupDevicesByRoom = (devices: any[]): Record<string, any[]> => {

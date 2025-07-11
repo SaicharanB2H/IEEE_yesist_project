@@ -1,7 +1,7 @@
 import { Device } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 
 interface DeviceCardProps {
   device: Device;

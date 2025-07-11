@@ -1,7 +1,7 @@
 import { Device } from '@/types';
 import { mockDevices } from '@/utils/mockData';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, RefreshControl, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, RefreshControl, Text as RNText, View } from 'react-native';
 import DeviceCard from './DeviceCard';
 
 interface DeviceListProps {
@@ -75,24 +75,24 @@ const DeviceList: React.FC<DeviceListProps> = ({
 
   const renderEmptyState = () => (
     <View className="flex-1 items-center justify-center py-12">
-      <Text className="text-lg font-semibold text-gray-500 dark:text-gray-400 mb-2">
+      <RNText className="text-lg font-semibold text-gray-500 dark:text-gray-400 mb-2">
         No devices found
-      </Text>
-      <Text className="text-gray-400 dark:text-gray-500 text-center px-8">
+      </RNText>
+      <RNText className="text-gray-400 dark:text-gray-500 text-center px-8">
         {filterByRoom || filterByStatus 
           ? 'No devices match your current filters'
           : 'Add your first device to get started'
         }
-      </Text>
+      </RNText>
     </View>
   );
 
   const renderLoadingState = () => (
     <View className="flex-1 items-center justify-center py-12">
       <ActivityIndicator size="large" color="#3B82F6" />
-      <Text className="text-gray-500 dark:text-gray-400 mt-4">
+      <RNText className="text-gray-500 dark:text-gray-400 mt-4">
         Loading devices...
-      </Text>
+      </RNText>
     </View>
   );
 

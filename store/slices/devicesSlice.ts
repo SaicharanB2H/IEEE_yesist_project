@@ -80,7 +80,7 @@ const devicesSlice = createSlice({
       })
       .addCase(fetchDevices.fulfilled, (state, action) => {
         state.loading = false;
-        state.devices = action.payload;
+        state.devices = action.payload || [];
       })
       .addCase(fetchDevices.rejected, (state, action) => {
         state.loading = false;
@@ -92,10 +92,12 @@ const devicesSlice = createSlice({
       })
       .addCase(toggleDevice.fulfilled, (state, action) => {
         state.loading = false;
-        const device = state.devices.find(d => d.id === action.payload.id);
-        if (device) {
-          device.status = action.payload.status;
-          device.lastUpdated = new Date();
+        if (action.payload) {
+          const device = state.devices.find(d => d.id === action.payload.id);
+          if (device) {
+            device.status = action.payload.status;
+            device.lastUpdated = new Date();
+          }
         }
       })
       .addCase(toggleDevice.rejected, (state, action) => {
@@ -105,7 +107,7 @@ const devicesSlice = createSlice({
       // Update metrics
       .addCase(updateDeviceMetrics.fulfilled, (state, action) => {
         const device = state.devices.find(d => d.id === action.payload.deviceId);
-        if (device) {
+        if (device && action.payload.metrics) {
           device.powerUsage = action.payload.metrics.powerUsage;
           device.estimatedCost = action.payload.metrics.cost;
           device.lastUpdated = new Date();

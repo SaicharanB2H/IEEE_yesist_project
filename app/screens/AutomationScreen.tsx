@@ -2,7 +2,7 @@ import { AutomationRule } from '@/types';
 import { mockAutomationRules } from '@/utils/mockData';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, ScrollView, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const AutomationScreen: React.FC = () => {

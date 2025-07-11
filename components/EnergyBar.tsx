@@ -1,6 +1,6 @@
 import { Device } from '@/types';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text as RNText, View } from 'react-native';
 
 interface EnergyBarProps {
   device: Device;
@@ -33,16 +33,16 @@ const EnergyBar: React.FC<EnergyBarProps> = ({
     <View className="w-full">
       {showLabel && (
         <View className="flex-row justify-between items-center mb-2">
-          <Text className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <RNText className="text-sm font-medium text-gray-700 dark:text-gray-300">
             Power Usage
-          </Text>
+          </RNText>
           <View className="flex-row items-center">
-            <Text className="text-sm font-semibold text-gray-900 dark:text-white">
+            <RNText className="text-sm font-semibold text-gray-900 dark:text-white">
               {device.powerUsage}W
-            </Text>
-            <Text className="text-xs text-gray-500 dark:text-gray-400 ml-1">
+            </RNText>
+            <RNText className="text-xs text-gray-500 dark:text-gray-400 ml-1">
               / {maxPower}W
-            </Text>
+            </RNText>
           </View>
         </View>
       )}
@@ -65,20 +65,20 @@ const EnergyBar: React.FC<EnergyBarProps> = ({
         
         {/* Percentage Text Overlay */}
         <View className="absolute inset-0 flex-row items-center justify-center">
-          <Text className="text-xs font-medium text-white drop-shadow-sm">
+          <RNText className="text-xs font-medium text-white drop-shadow-sm">
             {powerPercentage.toFixed(1)}%
-          </Text>
+          </RNText>
         </View>
       </View>
 
       {showLabel && (
         <View className="flex-row justify-between items-center mt-1">
-          <Text className="text-xs text-gray-500 dark:text-gray-400">
+          <RNText className="text-xs text-gray-500 dark:text-gray-400">
             {getEfficiencyLabel(powerPercentage)}
-          </Text>
-          <Text className="text-xs text-gray-500 dark:text-gray-400">
+          </RNText>
+          <RNText className="text-xs text-gray-500 dark:text-gray-400">
             ${device.estimatedCost.toFixed(3)}/day
-          </Text>
+          </RNText>
         </View>
       )}
     </View>
