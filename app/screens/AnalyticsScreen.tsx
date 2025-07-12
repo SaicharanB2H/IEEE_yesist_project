@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { Dimensions, ScrollView, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Text as RNText, ScrollView, TouchableOpacity, View } from 'react-native';
 import { BarChart, LineChart, PieChart } from 'react-native-chart-kit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -98,13 +98,13 @@ const AnalyticsScreen: React.FC = () => {
               : 'bg-gray-200 dark:bg-gray-700'
           }`}
         >
-          <Text className={`text-sm font-medium ${
+          <RNText className={`text-sm font-medium ${
             period === p.key 
               ? 'text-white' 
               : 'text-gray-700 dark:text-gray-300'
           }`}>
             {p.label}
-          </Text>
+          </RNText>
         </TouchableOpacity>
       ))}
     </ScrollView>
@@ -131,13 +131,13 @@ const AnalyticsScreen: React.FC = () => {
             size={20} 
             color={selectedChart === chart.key ? 'white' : '#6B7280'} 
           />
-          <Text className={`ml-2 font-medium ${
+          <RNText className={`ml-2 font-medium ${
             selectedChart === chart.key 
               ? 'text-white' 
               : 'text-gray-700 dark:text-gray-300'
           }`}>
             {chart.label}
-          </Text>
+          </RNText>
         </TouchableOpacity>
       ))}
     </View>
@@ -146,15 +146,15 @@ const AnalyticsScreen: React.FC = () => {
   const renderSummaryCards = () => (
     <View className="flex-row mb-6">
       <View className="flex-1 bg-white dark:bg-gray-800 p-4 rounded-lg mr-2 shadow-sm">
-        <Text className="text-gray-500 dark:text-gray-400 text-sm">Total Usage</Text>
-        <Text className="text-2xl font-bold text-gray-900 dark:text-white">245 kWh</Text>
-        <Text className="text-green-500 text-sm mt-1">↓ 12% from last period</Text>
+        <RNText className="text-gray-500 dark:text-gray-400 text-sm">Total Usage</RNText>
+        <RNText className="text-2xl font-bold text-gray-900 dark:text-white">245 kWh</RNText>
+        <RNText className="text-green-500 text-sm mt-1">↓ 12% from last period</RNText>
       </View>
       
       <View className="flex-1 bg-white dark:bg-gray-800 p-4 rounded-lg ml-2 shadow-sm">
-        <Text className="text-gray-500 dark:text-gray-400 text-sm">Total Cost</Text>
-        <Text className="text-2xl font-bold text-gray-900 dark:text-white">$68.25</Text>
-        <Text className="text-red-500 text-sm mt-1">↑ 5% from last period</Text>
+        <RNText className="text-gray-500 dark:text-gray-400 text-sm">Total Cost</RNText>
+        <RNText className="text-2xl font-bold text-gray-900 dark:text-white">$68.25</RNText>
+        <RNText className="text-red-500 text-sm mt-1">↑ 5% from last period</RNText>
       </View>
     </View>
   );
@@ -164,9 +164,9 @@ const AnalyticsScreen: React.FC = () => {
       case 'usage':
         return (
           <View className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm mb-4">
-            <Text className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <RNText className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               Energy Usage Trend
-            </Text>
+            </RNText>
             <LineChart
               data={usageData}
               width={screenWidth - 64}
@@ -184,9 +184,9 @@ const AnalyticsScreen: React.FC = () => {
       case 'cost':
         return (
           <View className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm mb-4">
-            <Text className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <RNText className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               Cost Analysis
-            </Text>
+            </RNText>
             <BarChart
               data={costData}
               width={screenWidth - 64}
@@ -205,9 +205,9 @@ const AnalyticsScreen: React.FC = () => {
       case 'devices':
         return (
           <View className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm mb-4">
-            <Text className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <RNText className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               Usage by Device Type
-            </Text>
+            </RNText>
             <PieChart
               data={deviceUsageData}
               width={screenWidth - 64}
@@ -233,19 +233,19 @@ const AnalyticsScreen: React.FC = () => {
     <View className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg shadow-sm">
       <View className="flex-row items-center mb-3">
         <Ionicons name="leaf" size={24} color="#10B981" />
-        <Text className="text-lg font-semibold text-green-800 dark:text-green-400 ml-2">
+        <RNText className="text-lg font-semibold text-green-800 dark:text-green-400 ml-2">
           Eco Tips
-        </Text>
+        </RNText>
       </View>
-      <Text className="text-green-700 dark:text-green-300 mb-2">
+      <RNText className="text-green-700 dark:text-green-300 mb-2">
         • Turn off devices when not in use to save ~15% on your bill
-      </Text>
-      <Text className="text-green-700 dark:text-green-300 mb-2">
+      </RNText>
+      <RNText className="text-green-700 dark:text-green-300 mb-2">
         • Use smart scheduling for AC during peak hours
-      </Text>
-      <Text className="text-green-700 dark:text-green-300">
+      </RNText>
+      <RNText className="text-green-700 dark:text-green-300">
         • Replace old bulbs with LED to reduce consumption by 80%
-      </Text>
+      </RNText>
     </View>
   );
 
@@ -253,12 +253,12 @@ const AnalyticsScreen: React.FC = () => {
     <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900">
       {/* Header */}
       <View className="px-4 py-4 bg-white dark:bg-gray-800 shadow-sm">
-        <Text className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+        <RNText className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
           Analytics & Insights
-        </Text>
-        <Text className="text-gray-600 dark:text-gray-400">
+        </RNText>
+        <RNText className="text-gray-600 dark:text-gray-400">
           Track your energy consumption patterns
-        </Text>
+        </RNText>
       </View>
 
       <ScrollView className="flex-1 px-4 py-4">

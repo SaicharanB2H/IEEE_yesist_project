@@ -1,7 +1,7 @@
 import { Device } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 
 interface DeviceCardProps {
   device: Device;
@@ -46,13 +46,13 @@ const DeviceCard: React.FC<DeviceCardProps> = ({
   return (
     <TouchableOpacity
       onPress={() => onPress?.(device)}
-      className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 mb-3"
+      className="p-4 mb-3 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700"
       activeOpacity={0.7}
     >
       <View className="flex-row items-center justify-between">
         {/* Device Info */}
         <View className="flex-row items-center flex-1">
-          <View className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 items-center justify-center mr-3">
+          <View className="items-center justify-center w-12 h-12 mr-3 bg-gray-100 rounded-full dark:bg-gray-700">
             <Ionicons 
               name={getDeviceIcon(device.type) as any} 
               size={24} 
@@ -64,7 +64,7 @@ const DeviceCard: React.FC<DeviceCardProps> = ({
             <Text className="text-lg font-semibold text-gray-900 dark:text-white">
               {device.name}
             </Text>
-            <Text className="text-sm text-gray-500 dark:text-gray-400 capitalize">
+            <Text className="text-sm text-gray-500 capitalize dark:text-gray-400">
               {device.room} • {device.type}
             </Text>
             
@@ -73,7 +73,7 @@ const DeviceCard: React.FC<DeviceCardProps> = ({
               <Text className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 {device.powerUsage}W
               </Text>
-              <Text className="text-xs text-gray-500 dark:text-gray-400 ml-2">
+              <Text className="ml-2 text-xs text-gray-500 dark:text-gray-400">
                 ${device.estimatedCost.toFixed(2)}/day
               </Text>
             </View>
@@ -89,7 +89,7 @@ const DeviceCard: React.FC<DeviceCardProps> = ({
               size={16} 
               color={device.isOnline ? '#10B981' : '#EF4444'} 
             />
-            <Text className="text-xs text-gray-500 dark:text-gray-400 ml-1">
+            <Text className="ml-1 text-xs text-gray-500 dark:text-gray-400">
               {device.wifiStrength}%
             </Text>
           </View>
@@ -119,7 +119,7 @@ const DeviceCard: React.FC<DeviceCardProps> = ({
 
       {/* Power Usage Bar */}
       <View className="mt-3">
-        <View className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+        <View className="h-2 overflow-hidden bg-gray-200 rounded-full dark:bg-gray-700">
           <View 
             className="h-full bg-blue-500 rounded-full"
             style={{ 
@@ -127,7 +127,7 @@ const DeviceCard: React.FC<DeviceCardProps> = ({
             }}
           />
         </View>
-        <Text className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+        <Text className="mt-1 text-xs text-gray-500 dark:text-gray-400">
           Last updated: {new Date(device.lastUpdated).toLocaleTimeString()}
         </Text>
       </View>

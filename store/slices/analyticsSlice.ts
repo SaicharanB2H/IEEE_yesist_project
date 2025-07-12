@@ -1,5 +1,5 @@
 import { analyticsAPI } from '@/api/analyticsAPI';
-import { AnalyticsState } from '@/types';
+import { AnalyticsData, AnalyticsState } from '@/types';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: AnalyticsState = {
@@ -9,18 +9,27 @@ const initialState: AnalyticsState = {
   period: 'daily',
 };
 
-export const fetchAnalyticsData = createAsyncThunk(
+// Async thunk for fetching analytics data
+export const fetchAnalyticsData = createAsyncThunk<
+  AnalyticsData, // ✅ Thunk return type
+  'hourly' | 'daily' | 'weekly' | 'monthly', // ✅ Thunk argument type
+  { rejectValue: string } // ✅ Rejection value type
+>(
   'analytics/fetchData',
-  async (period: 'hourly' | 'daily' | 'weekly' | 'monthly', { rejectWithValue }) => {
+  async (period, { rejectWithValue }) => {
     try {
       const response = await analyticsAPI.getAnalytics(period);
+      if (!response.data) {
+        return rejectWithValue('No data returned from server');
+      }
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error.message || 'Failed to fetch analytics data');
     }
   }
 );
 
+// Create slice
 const analyticsSlice = createSlice({
   name: 'analytics',
   initialState,
@@ -40,14 +49,15 @@ const analyticsSlice = createSlice({
       })
       .addCase(fetchAnalyticsData.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload;
+        state.data = action.payload ?? null; // ✅ Fix for TS2322 error
       })
       .addCase(fetchAnalyticsData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = action.payload ?? 'Unknown error'; // fallback
       });
   },
 });
 
+// Export actions and reducer
 export const { setPeriod, clearError } = analyticsSlice.actions;
 export default analyticsSlice.reducer;

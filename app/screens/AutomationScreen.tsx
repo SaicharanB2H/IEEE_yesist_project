@@ -2,7 +2,7 @@ import { AutomationRule } from '@/types';
 import { mockAutomationRules } from '@/utils/mockData';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, ScrollView, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, Text as RNText, ScrollView, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const AutomationScreen: React.FC = () => {
@@ -84,10 +84,10 @@ const AutomationScreen: React.FC = () => {
   };
 
   const renderRuleCard = ({ item: rule }: { item: AutomationRule }) => (
-    <View className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm mb-3 border border-gray-200 dark:border-gray-700">
+    <View className="p-4 mb-3 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
       <View className="flex-row items-center justify-between mb-2">
         <View className="flex-row items-center flex-1">
-          <View className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 items-center justify-center mr-3">
+          <View className="items-center justify-center w-10 h-10 mr-3 bg-blue-100 rounded-full dark:bg-blue-900/30">
             <Ionicons 
               name={getRuleTypeIcon(rule) as any} 
               size={20} 
@@ -96,12 +96,12 @@ const AutomationScreen: React.FC = () => {
           </View>
           
           <View className="flex-1">
-            <Text className="text-lg font-semibold text-gray-900 dark:text-white">
+            <RNText className="text-lg font-semibold text-gray-900 dark:text-white">
               {rule.name}
-            </Text>
-            <Text className="text-sm text-gray-500 dark:text-gray-400">
+            </RNText>
+            <RNText className="text-sm text-gray-500 dark:text-gray-400">
               Created {new Date(rule.createdAt).toLocaleDateString()}
-            </Text>
+            </RNText>
           </View>
         </View>
 
@@ -129,21 +129,21 @@ const AutomationScreen: React.FC = () => {
       </View>
 
       <View className="mb-3">
-        <Text className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <RNText className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
           Conditions:
-        </Text>
-        <Text className="text-sm text-gray-600 dark:text-gray-400">
+        </RNText>
+        <RNText className="text-sm text-gray-600 dark:text-gray-400">
           {formatConditions(rule)}
-        </Text>
+        </RNText>
       </View>
 
       <View>
-        <Text className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <RNText className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
           Actions:
-        </Text>
-        <Text className="text-sm text-gray-600 dark:text-gray-400">
+        </RNText>
+        <RNText className="text-sm text-gray-600 dark:text-gray-400">
           {formatActions(rule)}
-        </Text>
+        </RNText>
       </View>
 
       <View className={`mt-3 px-2 py-1 rounded-full self-start ${
@@ -151,22 +151,22 @@ const AutomationScreen: React.FC = () => {
           ? 'bg-green-100 dark:bg-green-900/30' 
           : 'bg-gray-100 dark:bg-gray-700'
       }`}>
-        <Text className={`text-xs font-medium ${
+        <RNText className={`text-xs font-medium ${
           rule.isActive 
             ? 'text-green-800 dark:text-green-400' 
             : 'text-gray-600 dark:text-gray-400'
         }`}>
           {rule.isActive ? 'Active' : 'Inactive'}
-        </Text>
+        </RNText>
       </View>
     </View>
   );
 
   const renderQuickActions = () => (
     <View className="mb-6">
-      <Text className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+      <RNText className="mb-3 text-lg font-semibold text-gray-900 dark:text-white">
         Quick Rules
-      </Text>
+      </RNText>
       
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {[
@@ -178,17 +178,17 @@ const AutomationScreen: React.FC = () => {
           <TouchableOpacity
             key={index}
             onPress={() => Alert.alert('Coming Soon', 'Rule creation feature will be available soon!')}
-            className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm mr-3 w-32 border border-gray-200 dark:border-gray-700"
+            className="w-32 p-4 mr-3 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700"
           >
-            <View className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 items-center justify-center mb-2">
+            <View className="items-center justify-center w-10 h-10 mb-2 bg-blue-100 rounded-full dark:bg-blue-900/30">
               <Ionicons name={action.icon as any} size={20} color="#3B82F6" />
             </View>
-            <Text className="text-sm font-medium text-gray-900 dark:text-white mb-1">
+            <RNText className="mb-1 text-sm font-medium text-gray-900 dark:text-white">
               {action.title}
-            </Text>
-            <Text className="text-xs text-gray-500 dark:text-gray-400">
+            </RNText>
+            <RNText className="text-xs text-gray-500 dark:text-gray-400">
               {action.description}
-            </Text>
+            </RNText>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -196,19 +196,19 @@ const AutomationScreen: React.FC = () => {
   );
 
   const renderEmptyState = () => (
-    <View className="flex-1 items-center justify-center py-12">
+    <View className="items-center justify-center flex-1 py-12">
       <Ionicons name="settings-outline" size={64} color="#9CA3AF" />
-      <Text className="text-lg font-semibold text-gray-500 dark:text-gray-400 mb-2 mt-4">
+      <RNText className="mt-4 mb-2 text-lg font-semibold text-gray-500 dark:text-gray-400">
         No automation rules yet
-      </Text>
-      <Text className="text-gray-400 dark:text-gray-500 text-center px-8 mb-6">
+      </RNText>
+      <RNText className="px-8 mb-6 text-center text-gray-400 dark:text-gray-500">
         Create your first automation rule to save energy and reduce costs
-      </Text>
+      </RNText>
       <TouchableOpacity
         onPress={() => Alert.alert('Coming Soon', 'Rule creation feature will be available soon!')}
-        className="bg-blue-500 px-6 py-3 rounded-lg"
+        className="px-6 py-3 bg-blue-500 rounded-lg"
       >
-        <Text className="text-white font-medium">Create First Rule</Text>
+        <RNText className="font-medium text-white">Create First Rule</RNText>
       </TouchableOpacity>
     </View>
   );
@@ -216,20 +216,20 @@ const AutomationScreen: React.FC = () => {
   return (
     <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <View className="px-4 py-4 bg-white dark:bg-gray-800 shadow-sm">
+      <View className="px-4 py-4 bg-white shadow-sm dark:bg-gray-800">
         <View className="flex-row items-center justify-between">
           <View>
-            <Text className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            <RNText className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
               Smart Automation
-            </Text>
-            <Text className="text-gray-600 dark:text-gray-400">
+            </RNText>
+            <RNText className="text-gray-600 dark:text-gray-400">
               Set rules to automate your devices
-            </Text>
+            </RNText>
           </View>
           
           <TouchableOpacity
             onPress={() => Alert.alert('Coming Soon', 'Rule creation feature will be available soon!')}
-            className="bg-blue-500 w-12 h-12 rounded-full items-center justify-center"
+            className="items-center justify-center w-12 h-12 bg-blue-500 rounded-full"
           >
             <Ionicons name="add" size={24} color="white" />
           </TouchableOpacity>
@@ -240,14 +240,14 @@ const AutomationScreen: React.FC = () => {
         {renderQuickActions()}
         
         <View className="flex-row items-center justify-between mb-4">
-          <Text className="text-lg font-semibold text-gray-900 dark:text-white">
+          <RNText className="text-lg font-semibold text-gray-900 dark:text-white">
             Your Rules ({rules.length})
-          </Text>
+          </RNText>
           
           {rules.length > 0 && (
-            <Text className="text-sm text-gray-500 dark:text-gray-400">
+            <RNText className="text-sm text-gray-500 dark:text-gray-400">
               {rules.filter(r => r.isActive).length} active
-            </Text>
+            </RNText>
           )}
         </View>
 
