@@ -253,6 +253,10 @@ const AutomationScreen: React.FC = () => {
 
         {rules.length === 0 ? (
           renderEmptyState()
+        ) : loading ? (
+          <View className="items-center justify-center py-12">
+            <RNText className="text-gray-500 dark:text-gray-400">Loading rules...</RNText>
+          </View>
         ) : (
           <FlatList
             data={rules}
