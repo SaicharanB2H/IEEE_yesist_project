@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useCallback } from 'react';
-import { Animated, Dimensions, Easing, StyleSheet, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/ThemedText';
-import { PremiumButton } from '@/components/ui/PremiumButton';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { PremiumButton } from '@/components/ui/PremiumButton';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { LinearGradient } from 'expo-linear-gradient';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { Animated, Dimensions, Easing, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width, height } = Dimensions.get('window');
 

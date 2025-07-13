@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Redirect } from 'expo-router';
 import SplashScreen from '@/components/SplashScreen';
+import { Redirect } from 'expo-router';
+import React, { useState } from 'react';
 
 export default function SplashScreenPage() {
   const [showSplash, setShowSplash] = useState(true);
