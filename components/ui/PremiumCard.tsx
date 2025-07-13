@@ -35,8 +35,10 @@ export function PremiumCard({
       case 'elevated':
         return {
           ...baseStyle,
-          backgroundColor: colors.elevated,
-          ...createShadow('lg'),
+          backgroundColor: colors.card,
+          ...createShadow(colorScheme === 'dark' ? 'md' : 'lg'),
+          borderWidth: colorScheme === 'dark' ? 1 : 0,
+          borderColor: colorScheme === 'dark' ? colors.border : 'transparent',
         };
       case 'outlined':
         return {

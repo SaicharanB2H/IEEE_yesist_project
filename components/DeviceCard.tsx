@@ -1,3 +1,5 @@
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
 import { Device } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
@@ -16,6 +18,8 @@ const DeviceCard: React.FC<DeviceCardProps> = ({
   onPress, 
   isLoading = false 
 }) => {
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? 'light'];
   const getDeviceIcon = (type: Device['type']) => {
     switch (type) {
       case 'light': return 'bulb';
@@ -46,13 +50,32 @@ const DeviceCard: React.FC<DeviceCardProps> = ({
   return (
     <TouchableOpacity
       onPress={() => onPress?.(device)}
-      className="p-4 mb-3 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700"
+      style={{
+        padding: 16,
+        marginBottom: 12,
+        backgroundColor: colors.card,
+        borderWidth: 1,
+        borderColor: colors.border,
+        borderRadius: 12,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: colorScheme === 'dark' ? 0.3 : 0.1,
+        shadowRadius: 4,
+        elevation: 3
+      }}
       activeOpacity={0.7}
     >
-      <View className="flex-row items-center justify-between">
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         {/* Device Info */}
-        <View className="flex-row items-center flex-1">
-          <View className="items-center justify-center w-12 h-12 mr-3 bg-gray-100 rounded-full dark:bg-gray-700">
+        <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+          <View style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 48,
+            height: 48,
+            marginRight: 12,
+            backgroundColor: colors.surfaceSecondary,
+            borderRadius: 24
+          }}>
             <Ionicons 
               name={getDeviceIcon(device.type) as any} 
               size={24} 
@@ -60,20 +83,37 @@ const DeviceCard: React.FC<DeviceCardProps> = ({
             />
           </View>
           
-          <View className="flex-1">
-            <Text className="text-lg font-semibold text-gray-900 dark:text-white">
+          <View style={{ flex: 1 }}>
+            <Text style={{
+              fontSize: 18,
+              fontWeight: '600',
+              color: colors.textPrimary,
+              marginBottom: 2
+            }}>
               {device.name}
             </Text>
-            <Text className="text-sm text-gray-500 capitalize dark:text-gray-400">
+            <Text style={{
+              fontSize: 14,
+              color: colors.textSecondary,
+              textTransform: 'capitalize'
+            }}>
               {device.room} • {device.type}
             </Text>
             
             {/* Power Usage */}
-            <View className="flex-row items-center mt-1">
-              <Text className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
+              <Text style={{
+                fontSize: 14,
+                fontWeight: '500',
+                color: colors.textPrimary
+              }}>
                 {device.powerUsage}W
               </Text>
-              <Text className="ml-2 text-xs text-gray-500 dark:text-gray-400">
+              <Text style={{
+                marginLeft: 8,
+                fontSize: 12,
+                color: colors.textSecondary
+              }}>
                 ${device.estimatedCost.toFixed(2)}/day
               </Text>
             </View>
@@ -81,15 +121,19 @@ const DeviceCard: React.FC<DeviceCardProps> = ({
         </View>
 
         {/* Status Indicators */}
-        <View className="items-end">
+        <View style={{ alignItems: 'flex-end' }}>
           {/* WiFi Status */}
-          <View className="flex-row items-center mb-2">
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
             <Ionicons 
               name={getWifiStrengthIcon(device.wifiStrength)} 
               size={16} 
-              color={device.isOnline ? '#10B981' : '#EF4444'} 
+              color={device.isOnline ? colors.success : colors.error} 
             />
-            <Text className="ml-1 text-xs text-gray-500 dark:text-gray-400">
+            <Text style={{
+              marginLeft: 4,
+              fontSize: 12,
+              color: colors.textSecondary
+            }}>
               {device.wifiStrength}%
             </Text>
           </View>
@@ -118,16 +162,27 @@ const DeviceCard: React.FC<DeviceCardProps> = ({
       </View>
 
       {/* Power Usage Bar */}
-      <View className="mt-3">
-        <View className="h-2 overflow-hidden bg-gray-200 rounded-full dark:bg-gray-700">
+      <View style={{ marginTop: 12 }}>
+        <View style={{
+          height: 8,
+          overflow: 'hidden',
+          backgroundColor: colors.surfaceSecondary,
+          borderRadius: 4
+        }}>
           <View 
-            className="h-full bg-blue-500 rounded-full"
             style={{ 
+              height: '100%',
+              backgroundColor: colors.primary,
+              borderRadius: 4,
               width: `${Math.min((device.powerUsage / 1000) * 100, 100)}%` 
             }}
           />
         </View>
-        <Text className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+        <Text style={{
+          marginTop: 4,
+          fontSize: 12,
+          color: colors.textSecondary
+        }}>
           Last updated: {new Date(device.lastUpdated).toLocaleTimeString()}
         </Text>
       </View>

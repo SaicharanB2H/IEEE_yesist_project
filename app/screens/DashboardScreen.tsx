@@ -1,11 +1,16 @@
 import DeviceList from '@/components/DeviceList';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
 import { Device } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { Alert, Text as RNText, ScrollView, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Alert, ScrollView, TouchableOpacity, View } from 'react-native';
 
 const DashboardScreen: React.FC = () => {
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? 'light'];
   const [selectedRoom, setSelectedRoom] = useState<string | undefined>();
   const [selectedStatus, setSelectedStatus] = useState<Device['status'] | undefined>();
 
@@ -30,59 +35,87 @@ const DashboardScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900">
+    <ThemedView style={{ flex: 1 }}>
       {/* Header */}
-      <View className="px-4 py-4 bg-white dark:bg-gray-800 shadow-sm">
-        <RNText className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+      <View style={{ 
+        paddingHorizontal: 16, 
+        paddingVertical: 16, 
+        backgroundColor: colors.surface,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        elevation: 3
+      }}>
+        <ThemedText type="title" style={{ 
+          fontSize: 24, 
+          fontWeight: 'bold', 
+          color: colors.textPrimary,
+          marginBottom: 4
+        }}>
           Smart Power Dashboard
-        </RNText>
-        <RNText className="text-gray-600 dark:text-gray-400">
+        </ThemedText>
+        <ThemedText type="body" style={{ color: colors.textSecondary }}>
           Monitor and control your devices
-        </RNText>
+        </ThemedText>
       </View>
 
       {/* Filters */}
-      <View className="px-4 py-3 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <RNText className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+      <View style={{ 
+        paddingHorizontal: 16, 
+        paddingVertical: 12, 
+        backgroundColor: colors.surface,
+        borderBottomWidth: 1,
+        borderBottomColor: colors.borderLight
+      }}>
+        <ThemedText type="defaultSemiBold" style={{ 
+          fontSize: 14, 
+          fontWeight: '500', 
+          color: colors.textSecondary,
+          marginBottom: 8
+        }}>
           Filters
-        </RNText>
+        </ThemedText>
         
         {/* Room Filter */}
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-2">
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 8 }}>
           <TouchableOpacity
             onPress={() => setSelectedRoom(undefined)}
-            className={`px-3 py-2 rounded-full mr-2 ${
-              !selectedRoom 
-                ? 'bg-blue-500' 
-                : 'bg-gray-200 dark:bg-gray-700'
-            }`}
+            style={{
+              paddingHorizontal: 12,
+              paddingVertical: 8,
+              borderRadius: 20,
+              marginRight: 8,
+              backgroundColor: !selectedRoom ? colors.primary : colors.surfaceSecondary
+            }}
           >
-            <RNText className={`text-sm ${
-              !selectedRoom 
-                ? 'text-white font-medium' 
-                : 'text-gray-700 dark:text-gray-300'
-            }`}>
+            <ThemedText type="body" style={{
+              fontSize: 14,
+              color: !selectedRoom ? colors.textInverse : colors.textPrimary,
+              fontWeight: !selectedRoom ? '500' : '400'
+            }}>
               All Rooms
-            </RNText>
+            </ThemedText>
           </TouchableOpacity>
           
           {rooms.map((room) => (
             <TouchableOpacity
               key={room}
               onPress={() => setSelectedRoom(room)}
-              className={`px-3 py-2 rounded-full mr-2 ${
-                selectedRoom === room 
-                  ? 'bg-blue-500' 
-                  : 'bg-gray-200 dark:bg-gray-700'
-              }`}
+              style={{
+                paddingHorizontal: 12,
+                paddingVertical: 8,
+                borderRadius: 20,
+                marginRight: 8,
+                backgroundColor: selectedRoom === room ? colors.primary : colors.surfaceSecondary
+              }}
             >
-              <RNText className={`text-sm ${
-                selectedRoom === room 
-                  ? 'text-white font-medium' 
-                  : 'text-gray-700 dark:text-gray-300'
-              }`}>
+              <ThemedText type="body" style={{
+                fontSize: 14,
+                color: selectedRoom === room ? colors.textInverse : colors.textPrimary,
+                fontWeight: selectedRoom === room ? '500' : '400'
+              }}>
                 {room}
-              </RNText>
+              </ThemedText>
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -91,42 +124,53 @@ const DashboardScreen: React.FC = () => {
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <TouchableOpacity
             onPress={() => setSelectedStatus(undefined)}
-            className={`px-3 py-2 rounded-full mr-2 ${
-              !selectedStatus 
-                ? 'bg-green-500' 
-                : 'bg-gray-200 dark:bg-gray-700'
-            }`}
+            style={{
+              paddingHorizontal: 12,
+              paddingVertical: 8,
+              borderRadius: 20,
+              marginRight: 8,
+              backgroundColor: !selectedStatus ? colors.success : colors.surfaceSecondary
+            }}
           >
-            <RNText className={`text-sm ${
-              !selectedStatus 
-                ? 'text-white font-medium' 
-                : 'text-gray-700 dark:text-gray-300'
-            }`}>
+            <ThemedText style={{
+              fontSize: 14,
+              color: !selectedStatus ? colors.textInverse : colors.textPrimary,
+              fontWeight: !selectedStatus ? '500' : '400'
+            }}>
               All Status
-            </RNText>
+            </ThemedText>
           </TouchableOpacity>
           
           {statusOptions.map((option) => (
             <TouchableOpacity
               key={option.key}
               onPress={() => setSelectedStatus(option.key)}
-              className={`px-3 py-2 rounded-full mr-2 flex-row items-center ${
-                selectedStatus === option.key 
-                  ? 'bg-green-500' 
-                  : 'bg-gray-200 dark:bg-gray-700'
-              }`}
+              style={{
+                paddingHorizontal: 12,
+                paddingVertical: 8,
+                borderRadius: 20,
+                marginRight: 8,
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: selectedStatus === option.key ? colors.success : colors.surfaceSecondary
+              }}
             >
               <View 
-                className="w-2 h-2 rounded-full mr-2"
-                style={{ backgroundColor: option.color }}
+                style={{ 
+                  width: 8, 
+                  height: 8, 
+                  borderRadius: 4, 
+                  marginRight: 8,
+                  backgroundColor: option.color 
+                }}
               />
-              <RNText className={`text-sm ${
-                selectedStatus === option.key 
-                  ? 'text-white font-medium' 
-                  : 'text-gray-700 dark:text-gray-300'
-              }`}>
+              <ThemedText style={{
+                fontSize: 14,
+                color: selectedStatus === option.key ? colors.textInverse : colors.textPrimary,
+                fontWeight: selectedStatus === option.key ? '500' : '400'
+              }}>
                 {option.label}
-              </RNText>
+              </ThemedText>
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -135,12 +179,16 @@ const DashboardScreen: React.FC = () => {
         {(selectedRoom || selectedStatus) && (
           <TouchableOpacity
             onPress={clearFilters}
-            className="flex-row items-center mt-2"
+            style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}
           >
-            <Ionicons name="close-circle" size={16} color="#6B7280" />
-            <RNText className="text-sm text-gray-500 dark:text-gray-400 ml-1">
+            <Ionicons name="close-circle" size={16} color={colors.textTertiary} />
+            <ThemedText style={{ 
+              fontSize: 14, 
+              color: colors.textSecondary, 
+              marginLeft: 4 
+            }}>
               Clear filters
-            </RNText>
+            </ThemedText>
           </TouchableOpacity>
         )}
       </View>
@@ -151,7 +199,7 @@ const DashboardScreen: React.FC = () => {
         filterByRoom={selectedRoom}
         filterByStatus={selectedStatus}
       />
-    </SafeAreaView>
+    </ThemedView>
   );
 };
 

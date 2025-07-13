@@ -1,7 +1,10 @@
+import { ThemedText } from '@/components/ThemedText';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
 import { Device } from '@/types';
 import { mockDevices } from '@/utils/mockData';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, RefreshControl, Text as RNText, View } from 'react-native';
+import { ActivityIndicator, FlatList, RefreshControl, View } from 'react-native';
 import DeviceCard from './DeviceCard';
 
 interface DeviceListProps {
@@ -15,6 +18,8 @@ const DeviceList: React.FC<DeviceListProps> = ({
   filterByRoom,
   filterByStatus 
 }) => {
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? 'light'];
   const [devices, setDevices] = useState<Device[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -74,25 +79,48 @@ const DeviceList: React.FC<DeviceListProps> = ({
   );
 
   const renderEmptyState = () => (
-    <View className="flex-1 items-center justify-center py-12">
-      <RNText className="text-lg font-semibold text-gray-500 dark:text-gray-400 mb-2">
+    <View style={{ 
+      flex: 1, 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      paddingVertical: 48 
+    }}>
+      <ThemedText style={{
+        fontSize: 18,
+        fontWeight: '600',
+        color: colors.textSecondary,
+        marginBottom: 8
+      }}>
         No devices found
-      </RNText>
-      <RNText className="text-gray-400 dark:text-gray-500 text-center px-8">
+      </ThemedText>
+      <ThemedText style={{
+        color: colors.textTertiary,
+        textAlign: 'center',
+        paddingHorizontal: 32,
+        lineHeight: 20
+      }}>
         {filterByRoom || filterByStatus 
           ? 'No devices match your current filters'
           : 'Add your first device to get started'
         }
-      </RNText>
+      </ThemedText>
     </View>
   );
 
   const renderLoadingState = () => (
-    <View className="flex-1 items-center justify-center py-12">
-      <ActivityIndicator size="large" color="#3B82F6" />
-      <RNText className="text-gray-500 dark:text-gray-400 mt-4">
+    <View style={{ 
+      flex: 1, 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      paddingVertical: 48 
+    }}>
+      <ActivityIndicator size="large" color={colors.primary} />
+      <ThemedText style={{
+        color: colors.textSecondary,
+        marginTop: 16
+      }}>
         Loading devices...
-      </RNText>
+      </ThemedText>
     </View>
   );
 

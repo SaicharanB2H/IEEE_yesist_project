@@ -1,12 +1,15 @@
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { useThemedStyles } from '@/hooks/useThemedStyles';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Dimensions, Text as RNText, ScrollView, TouchableOpacity, View } from 'react-native';
 import { BarChart, LineChart, PieChart } from 'react-native-chart-kit';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const screenWidth = Dimensions.get('window').width;
 
 const AnalyticsScreen: React.FC = () => {
+  const { styles, colors, colorScheme } = useThemedStyles();
   const [selectedChart, setSelectedChart] = useState<'usage' | 'cost' | 'devices'>('usage');
   const [period, setPeriod] = useState<'hourly' | 'daily' | 'weekly' | 'monthly'>('daily');
 
@@ -18,19 +21,19 @@ const AnalyticsScreen: React.FC = () => {
   ];
 
   const chartConfig = {
-    backgroundColor: '#ffffff',
-    backgroundGradientFrom: '#ffffff',
-    backgroundGradientTo: '#ffffff',
+    backgroundColor: colors.card,
+    backgroundGradientFrom: colors.card,
+    backgroundGradientTo: colors.card,
     decimalPlaces: 2,
-    color: (opacity = 1) => `rgba(59, 130, 246, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    color: (opacity = 1) => `rgba(14, 165, 233, ${opacity})`, // Blue color that works in both themes
+    labelColor: (opacity = 1) => colorScheme === 'dark' ? `rgba(255, 255, 255, ${opacity})` : `rgba(0, 0, 0, ${opacity})`,
     style: {
       borderRadius: 16,
     },
     propsForDots: {
       r: '6',
       strokeWidth: '2',
-      stroke: '#3B82F6',
+      stroke: colors.primary,
     },
   };
 
@@ -87,24 +90,22 @@ const AnalyticsScreen: React.FC = () => {
   ];
 
   const renderPeriodSelector = () => (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-4">
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 16 }}>
       {periods.map((p) => (
         <TouchableOpacity
           key={p.key}
           onPress={() => setPeriod(p.key)}
-          className={`px-4 py-2 rounded-full mr-3 ${
-            period === p.key 
-              ? 'bg-blue-500' 
-              : 'bg-gray-200 dark:bg-gray-700'
-          }`}
+          style={[
+            styles.filterChip,
+            period === p.key ? styles.activeFilterChip : styles.inactiveFilterChip
+          ]}
         >
-          <RNText className={`text-sm font-medium ${
-            period === p.key 
-              ? 'text-white' 
-              : 'text-gray-700 dark:text-gray-300'
-          }`}>
+          <ThemedText style={[
+            { fontSize: 14, fontWeight: '500' },
+            period === p.key ? styles.activeFilterText : styles.inactiveFilterText
+          ]}>
             {p.label}
-          </RNText>
+          </ThemedText>
         </TouchableOpacity>
       ))}
     </ScrollView>
@@ -144,17 +145,17 @@ const AnalyticsScreen: React.FC = () => {
   );
 
   const renderSummaryCards = () => (
-    <View className="flex-row mb-6">
-      <View className="flex-1 bg-white dark:bg-gray-800 p-4 rounded-lg mr-2 shadow-sm">
-        <RNText className="text-gray-500 dark:text-gray-400 text-sm">Total Usage</RNText>
-        <RNText className="text-2xl font-bold text-gray-900 dark:text-white">245 kWh</RNText>
-        <RNText className="text-green-500 text-sm mt-1">↓ 12% from last period</RNText>
+    <View style={{ flexDirection: 'row', marginBottom: 24 }}>
+      <View style={[styles.card, { flex: 1, marginRight: 8, padding: 16 }]}>
+        <ThemedText style={[styles.secondaryText, { fontSize: 14 }]}>Total Usage</ThemedText>
+        <ThemedText style={[styles.primaryText, { fontSize: 24, fontWeight: 'bold', marginTop: 4 }]}>245 kWh</ThemedText>
+        <ThemedText style={{ color: colors.success, fontSize: 14, marginTop: 4 }}>↓ 12% from last period</ThemedText>
       </View>
       
-      <View className="flex-1 bg-white dark:bg-gray-800 p-4 rounded-lg ml-2 shadow-sm">
-        <RNText className="text-gray-500 dark:text-gray-400 text-sm">Total Cost</RNText>
-        <RNText className="text-2xl font-bold text-gray-900 dark:text-white">$68.25</RNText>
-        <RNText className="text-red-500 text-sm mt-1">↑ 5% from last period</RNText>
+      <View style={[styles.card, { flex: 1, marginLeft: 8, padding: 16 }]}>
+        <ThemedText style={[styles.secondaryText, { fontSize: 14 }]}>Total Cost</ThemedText>
+        <ThemedText style={[styles.primaryText, { fontSize: 24, fontWeight: 'bold', marginTop: 4 }]}>$68.25</ThemedText>
+        <ThemedText style={{ color: colors.error, fontSize: 14, marginTop: 4 }}>↑ 5% from last period</ThemedText>
       </View>
     </View>
   );
@@ -163,10 +164,10 @@ const AnalyticsScreen: React.FC = () => {
     switch (selectedChart) {
       case 'usage':
         return (
-          <View className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm mb-4">
-            <RNText className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <View style={[styles.card, { padding: 16, marginBottom: 16 }]}>
+            <ThemedText style={[styles.primaryText, { fontSize: 18, fontWeight: '600', marginBottom: 16 }]}>
               Energy Usage Trend
-            </RNText>
+            </ThemedText>
             <LineChart
               data={usageData}
               width={screenWidth - 64}
@@ -250,25 +251,25 @@ const AnalyticsScreen: React.FC = () => {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900">
+    <ThemedView style={styles.container}>
       {/* Header */}
-      <View className="px-4 py-4 bg-white dark:bg-gray-800 shadow-sm">
-        <RNText className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+      <View style={styles.header}>
+        <ThemedText style={styles.headerTitle}>
           Analytics & Insights
-        </RNText>
-        <RNText className="text-gray-600 dark:text-gray-400">
+        </ThemedText>
+        <ThemedText style={styles.headerSubtitle}>
           Track your energy consumption patterns
-        </RNText>
+        </ThemedText>
       </View>
 
-      <ScrollView className="flex-1 px-4 py-4">
+      <ScrollView style={{ flex: 1, paddingHorizontal: 16, paddingVertical: 16 }}>
         {renderPeriodSelector()}
         {renderSummaryCards()}
         {renderChartSelector()}
         {renderChart()}
         {renderEcoTips()}
       </ScrollView>
-    </SafeAreaView>
+    </ThemedView>
   );
 };
 

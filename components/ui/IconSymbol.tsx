@@ -21,6 +21,25 @@ const MAPPING = {
   'chart.bar.fill': 'bar-chart',
   'gear': 'settings',
   'person.fill': 'person',
+  // Settings page icons
+  'lock.fill': 'lock',
+  'paintbrush.fill': 'palette',
+  'dollarsign.circle.fill': 'attach-money',
+  'bell.fill': 'notifications',
+  'envelope.fill': 'email',
+  'exclamationmark.triangle.fill': 'warning',
+  'plus.circle.fill': 'add-circle',
+  'wifi': 'wifi',
+  'arrow.down.doc.fill': 'download',
+  'shield.fill': 'security',
+  'doc.text.fill': 'description',
+  'questionmark.circle.fill': 'help',
+  'star.fill': 'star',
+  'paintbrush': 'brush',
+  'arrow.right.square': 'logout',
+  'trash': 'delete',
+  'leaf.fill': 'eco',
+  'bell.badge': 'notifications-active',
 } as IconMapping;
 
 /**

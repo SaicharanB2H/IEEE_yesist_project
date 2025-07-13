@@ -1,9 +1,10 @@
 import { deviceAPI } from '@/api/deviceAPI';
 import { Device, DevicesState } from '@/types';
+import { mockDevices } from '@/utils/mockData';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: DevicesState = {
-  devices: [],
+  devices: mockDevices, // Initialize with mock devices for demo
   loading: false,
   error: null,
   selectedDevice: null,
@@ -93,9 +94,9 @@ const devicesSlice = createSlice({
       .addCase(toggleDevice.fulfilled, (state, action) => {
         state.loading = false;
         if (action.payload) {
-          const device = state.devices.find(d => d.id === action.payload.id);
+          const device = state.devices.find(d => d.id === action.payload!.id);
           if (device) {
-            device.status = action.payload.status;
+            device.status = action.payload!.status;
             device.lastUpdated = new Date();
           }
         }

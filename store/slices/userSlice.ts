@@ -1,9 +1,10 @@
 import { User, UserState } from '@/types';
+import { mockUser } from '@/utils/mockData';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: UserState = {
-  user: null,
-  isAuthenticated: false,
+  user: mockUser, // Initialize with mock user for demo
+  isAuthenticated: true,
   loading: false,
   error: null,
 };
