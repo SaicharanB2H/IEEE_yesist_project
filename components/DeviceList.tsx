@@ -4,7 +4,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { Device } from '@/types';
 import { mockDevices } from '@/utils/mockData';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, RefreshControl, View } from 'react-native';
+import { FlatList, RefreshControl } from 'react-native';
 import DeviceCard from './DeviceCard';
 
 interface DeviceListProps {
@@ -63,89 +63,69 @@ const DeviceList: React.FC<DeviceListProps> = ({
     }, 500);
   };
 
+  const renderItem = ({ item }: { item: Device }) => (
+    <DeviceCard
+      device={item}
+      onPress={() => onDevicePress?.(item)}
+      isLoading={toggleLoading === item.id}
+      onToggle={() => handleToggleDevice(item.id)}
+    />
+  );
+
+  const renderLoadingItems = () => (
+    <FlatList
+      data={[1, 2, 3]}
+      renderItem={({ index }) => (
+        <DeviceCard
+          key={index}
+          isLoading={true}
+          onToggle={() => {}}
+          device={{
+            id: `loading-${index}`,
+            name: 'Loading...',
+            status: 'off',
+            type: 'other',
+            room: '',
+            powerUsage: 0,
+            isOnline: false,
+            wifiStrength: 0,
+            lastUpdated: new Date(),
+            estimatedCost: 0
+          }}
+        />
+      )}
+      keyExtractor={(_, index) => `loading-${index}`}
+    />
+  );
+
+  if (loading) {
+    return renderLoadingItems();
+  }
+
   const filteredDevices = devices.filter(device => {
     if (filterByRoom && device.room !== filterByRoom) return false;
     if (filterByStatus && device.status !== filterByStatus) return false;
     return true;
   });
 
-  const renderDeviceCard = ({ item }: { item: Device }) => (
-    <DeviceCard
-      device={item}
-      onToggle={handleToggleDevice}
-      onPress={onDevicePress}
-      isLoading={toggleLoading === item.id}
-    />
-  );
-
-  const renderEmptyState = () => (
-    <View style={{ 
-      flex: 1, 
-      alignItems: 'center', 
-      justifyContent: 'center', 
-      paddingVertical: 48 
-    }}>
-      <ThemedText style={{
-        fontSize: 18,
-        fontWeight: '600',
-        color: colors.textSecondary,
-        marginBottom: 8
-      }}>
-        No devices found
-      </ThemedText>
-      <ThemedText style={{
-        color: colors.textTertiary,
-        textAlign: 'center',
-        paddingHorizontal: 32,
-        lineHeight: 20
-      }}>
-        {filterByRoom || filterByStatus 
-          ? 'No devices match your current filters'
-          : 'Add your first device to get started'
-        }
-      </ThemedText>
-    </View>
-  );
-
-  const renderLoadingState = () => (
-    <View style={{ 
-      flex: 1, 
-      alignItems: 'center', 
-      justifyContent: 'center', 
-      paddingVertical: 48 
-    }}>
-      <ActivityIndicator size="large" color={colors.primary} />
-      <ThemedText style={{
-        color: colors.textSecondary,
-        marginTop: 16
-      }}>
-        Loading devices...
-      </ThemedText>
-    </View>
-  );
-
-  if (loading && !refreshing && devices.length === 0) {
-    return renderLoadingState();
-  }
-
   return (
-    <View className="flex-1">
-      <FlatList
-        data={filteredDevices}
-        renderItem={renderDeviceCard}
-        keyExtractor={(item) => item.id}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        contentContainerStyle={{ 
-          paddingHorizontal: 16, 
-          paddingVertical: 8,
-          flexGrow: 1 
-        }}
-        ListEmptyComponent={renderEmptyState}
-        showsVerticalScrollIndicator={false}
-      />
-    </View>
+    <FlatList
+      data={filteredDevices}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.id}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          tintColor={colors.text}
+        />
+      }
+      ListEmptyComponent={
+        <ThemedText className="text-center py-4">
+          No devices found
+        </ThemedText>
+      }
+    />
   );
 };
 
