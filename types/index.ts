@@ -21,12 +21,25 @@ export interface DeviceMetrics {
   carbonFootprint: number;
 }
 
+export interface AutomationCondition {
+  id: string;
+  type: 'time' | 'usage' | 'cost';
+  operator: '=' | '<' | '>' | '<=' | '>=';
+  value: string;
+  unit?: string;
+}
+
+export interface AutomationAction {
+  id: string;
+  type: 'toggle' | 'schedule' | 'notify';
+  value: string;
+}
+
 export interface AutomationRule {
   id: string;
   name: string;
-  deviceId: string;
-  conditions: RuleCondition[];
-  actions: RuleAction[];
+  conditions: AutomationCondition[];
+  actions: AutomationAction[];
   isActive: boolean;
   createdAt: Date;
 }
