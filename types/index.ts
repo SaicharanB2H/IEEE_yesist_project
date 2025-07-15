@@ -42,6 +42,7 @@ export interface AutomationRule {
   actions: AutomationAction[];
   isActive: boolean;
   createdAt: Date;
+  deviceId?: string;
 }
 
 export interface RuleCondition {

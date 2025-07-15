@@ -1,21 +1,30 @@
-import { AutomationAction, AutomationCondition, AutomationRule } from '@/types';
+import { AutomationAction, AutomationCondition, AutomationRule, Device } from '@/types';
 import { generateUUID } from '@/utils';
+import * as Validation from '@/utils/validation';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import React, { useState } from 'react';
-import { Alert, Modal, ScrollView, TextInput, TouchableOpacity, View } from 'react-native';
+import { Modal, ScrollView, TextInput, TouchableOpacity, View } from 'react-native';
 import { ThemedText } from '../ThemedText';
 
 interface RuleCreationModalProps {
   visible: boolean;
   onClose: () => void;
   onSave: (rule: AutomationRule) => void;
+  devices: Device[]; // Add devices prop
 }
 
-const RuleCreationModal: React.FC<RuleCreationModalProps> = ({ visible, onClose, onSave }) => {
+const RuleCreationModal: React.FC<RuleCreationModalProps> = ({ 
+  visible, 
+  onClose, 
+  onSave,
+  devices 
+}) => {
   const [name, setName] = useState('');
   const [conditions, setConditions] = useState<AutomationCondition[]>([]);
   const [actions, setActions] = useState<AutomationAction[]>([]);
+  const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const conditionTypes = [
     { type: 'time', label: 'Time', icon: 'time-outline' },
@@ -59,33 +68,118 @@ const RuleCreationModal: React.FC<RuleCreationModalProps> = ({ visible, onClose,
     setActions(actions.filter(a => a.id !== id));
   };
 
+  const validateCondition = (condition: AutomationCondition): boolean => {
+    let validationResult;
+    switch (condition.type) {
+      case 'time':
+        validationResult = Validation.validateTimeValue(condition.value);
+        break;
+      case 'usage':
+        validationResult = Validation.validateUsageValue(condition.value);
+        break;
+      case 'cost':
+        validationResult = Validation.validateCostValue(condition.value);
+        break;
+      default:
+        validationResult = { isValid: true };
+    }
+
+    if (!validationResult.isValid) {
+      setErrors(prev => ({
+        ...prev,
+        [condition.id]: validationResult.error || 'Invalid value'
+      }));
+      return false;
+    }
+
+    setErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors[condition.id];
+      return newErrors;
+    });
+    return true;
+  };
+
+  const validateAction = (action: AutomationAction): boolean => {
+    let validationResult;
+    switch (action.type) {
+      case 'toggle':
+        validationResult = Validation.validateToggleValue(action.value);
+        break;
+      case 'schedule':
+        validationResult = Validation.validateScheduleValue(action.value);
+        break;
+      case 'notify':
+        validationResult = Validation.validateNotificationValue(action.value);
+        break;
+      default:
+        validationResult = { isValid: true };
+    }
+
+    if (!validationResult.isValid) {
+      setErrors(prev => ({
+        ...prev,
+        [action.id]: validationResult.error || 'Invalid value'
+      }));
+      return false;
+    }
+
+    setErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors[action.id];
+      return newErrors;
+    });
+    return true;
+  };
+
   const handleUpdateCondition = (id: string, updates: Partial<AutomationCondition>) => {
-    setConditions(conditions.map(c => 
-      c.id === id ? { ...c, ...updates } : c
-    ));
+    setConditions(conditions.map(c => {
+      if (c.id === id) {
+        const updatedCondition = { ...c, ...updates };
+        validateCondition(updatedCondition);
+        return updatedCondition;
+      }
+      return c;
+    }));
   };
 
   const handleUpdateAction = (id: string, updates: Partial<AutomationAction>) => {
-    setActions(actions.map(a => 
-      a.id === id ? { ...a, ...updates } : a
-    ));
+    setActions(actions.map(a => {
+      if (a.id === id) {
+        const updatedAction = { ...a, ...updates };
+        validateAction(updatedAction);
+        return updatedAction;
+      }
+      return a;
+    }));
   };
 
   const handleSave = () => {
+    // Reset errors
+    setErrors({});
+
     if (!name.trim()) {
-      Alert.alert('Error', 'Please enter a rule name');
+      setErrors(prev => ({ ...prev, name: 'Please enter a rule name' }));
       return;
     }
 
     if (conditions.length === 0) {
-      Alert.alert('Error', 'Please add at least one condition');
+      setErrors(prev => ({ ...prev, conditions: 'Please add at least one condition' }));
       return;
     }
 
     if (actions.length === 0) {
-      Alert.alert('Error', 'Please add at least one action');
+      setErrors(prev => ({ ...prev, actions: 'Please add at least one action' }));
       return;
     }
+
+    // Validate all conditions
+    const conditionsValid = conditions.every(validateCondition);
+    if (!conditionsValid) return;
+
+    // Validate all actions
+    const actionsValid = actions.every(validateAction);
+    if (!actionsValid) return;
 
     const newRule: AutomationRule = {
       id: generateUUID(),
@@ -94,6 +188,7 @@ const RuleCreationModal: React.FC<RuleCreationModalProps> = ({ visible, onClose,
       actions,
       isActive: true,
       createdAt: new Date(),
+      deviceId: selectedDevice?.id, // Add device reference
     };
 
     onSave(newRule);
@@ -105,6 +200,7 @@ const RuleCreationModal: React.FC<RuleCreationModalProps> = ({ visible, onClose,
     setName('');
     setConditions([]);
     setActions([]);
+    setSelectedDevice(null);
   };
 
   const renderConditionEditor = (condition: AutomationCondition) => (
@@ -149,6 +245,12 @@ const RuleCreationModal: React.FC<RuleCreationModalProps> = ({ visible, onClose,
           </ThemedText>
         </TouchableOpacity>
       </View>
+
+      {errors[condition.id] && (
+        <ThemedText className="mt-1 text-xs text-red-500">
+          {errors[condition.id]}
+        </ThemedText>
+      )}
     </View>
   );
 
@@ -176,6 +278,44 @@ const RuleCreationModal: React.FC<RuleCreationModalProps> = ({ visible, onClose,
         value={action.value}
         onChangeText={(value) => handleUpdateAction(action.id, { value })}
       />
+
+      {errors[action.id] && (
+        <ThemedText className="mt-1 text-xs text-red-500">
+          {errors[action.id]}
+        </ThemedText>
+      )}
+    </View>
+  );
+
+  const renderDeviceSelector = () => (
+    <View className="mb-6">
+      <ThemedText className="mb-2 text-sm font-medium">Target Device</ThemedText>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {devices.map((device) => (
+          <TouchableOpacity
+            key={device.id}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              setSelectedDevice(device);
+            }}
+            className={`px-4 py-3 mr-2 rounded-lg border ${
+              selectedDevice?.id === device.id
+                ? 'bg-blue-500 border-blue-600'
+                : 'bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700'
+            }`}
+          >
+            <ThemedText
+              className={`text-sm font-medium ${
+                selectedDevice?.id === device.id
+                  ? 'text-white'
+                  : 'text-gray-900 dark:text-gray-100'
+              }`}
+            >
+              {device.name}
+            </ThemedText>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
     </View>
   );
 
@@ -214,7 +354,14 @@ const RuleCreationModal: React.FC<RuleCreationModalProps> = ({ visible, onClose,
               value={name}
               onChangeText={setName}
             />
+            {errors.name && (
+              <ThemedText className="mt-1 text-xs text-red-500">
+                {errors.name}
+              </ThemedText>
+            )}
           </View>
+
+          {renderDeviceSelector()}
 
           {/* Conditions */}
           <View className="mb-6">

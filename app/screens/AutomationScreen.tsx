@@ -1,7 +1,7 @@
 import RuleCard from '@/components/automation/RuleCard';
 import RuleCreationModal from '@/components/automation/RuleCreationModal';
-import { AutomationRule } from '@/types';
-import { mockAutomationRules } from '@/utils/mockData';
+import { AutomationRule, Device } from '@/types';
+import { mockAutomationRules, mockDevices } from '@/utils/mockData';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, Text as RNText, ScrollView, TouchableOpacity, View } from 'react-native';
@@ -11,11 +11,13 @@ const AutomationScreen: React.FC = () => {
   const [rules, setRules] = useState<AutomationRule[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [devices, setDevices] = useState<Device[]>([]);
 
   useEffect(() => {
-    // Simulate API call with mock data
+    // Simulate API calls with mock data
     setTimeout(() => {
       setRules(mockAutomationRules);
+      setDevices(mockDevices);
       setLoading(false);
     }, 1000);
   }, []);
@@ -44,8 +46,6 @@ const AutomationScreen: React.FC = () => {
       ]
     );
   };
-
-
 
   const renderRuleCard = ({ item: rule }: { item: AutomationRule }) => (
     <RuleCard
@@ -116,6 +116,7 @@ const AutomationScreen: React.FC = () => {
         visible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         onSave={handleAddRule}
+        devices={devices}
       />
       
       {/* Header */}
