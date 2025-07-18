@@ -68,6 +68,12 @@ const devicesSlice = createSlice({
         device.lastUpdated = new Date();
       }
     },
+    updateDevice: (state, action: PayloadAction<Device>) => {
+      const index = state.devices.findIndex(d => d.id === action.payload.id);
+      if (index !== -1) {
+        state.devices[index] = action.payload;
+      }
+    },
     clearError: (state) => {
       state.error = null;
     },
@@ -117,5 +123,5 @@ const devicesSlice = createSlice({
   },
 });
 
-export const { setSelectedDevice, updateDeviceStatus, updateDevicePower, clearError } = devicesSlice.actions;
+export const { setSelectedDevice, updateDeviceStatus, updateDevicePower, updateDevice, clearError } = devicesSlice.actions;
 export default devicesSlice.reducer;

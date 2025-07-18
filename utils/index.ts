@@ -79,7 +79,7 @@ export const throttle = <T extends (...args: any[]) => any>(
   func: T,
   delay: number
 ): ((...args: Parameters<T>) => void) => {
-  let timeoutId: NodeJS.Timeout;
+  let timeoutId: ReturnType<typeof setTimeout>;
   let lastExecTime = 0;
   
   return (...args: Parameters<T>) => {
@@ -102,7 +102,7 @@ export const debounce = <T extends (...args: any[]) => any>(
   func: T,
   delay: number
 ): ((...args: Parameters<T>) => void) => {
-  let timeoutId: NodeJS.Timeout;
+  let timeoutId: ReturnType<typeof setTimeout>;
   
   return (...args: Parameters<T>) => {
     clearTimeout(timeoutId);
@@ -160,7 +160,7 @@ export const generateColor = (seed: string): string => {
 };
 
 export const sortDevicesByStatus = (devices: any[]): any[] => {
-  const statusOrder = { on: 0, idle: 1, off: 2 };
+  const statusOrder: Record<string, number> = { on: 0, idle: 1, off: 2 };
   return devices.sort((a, b) => (statusOrder[a.status] ?? 3) - (statusOrder[b.status] ?? 3));
 };
 

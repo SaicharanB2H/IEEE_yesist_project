@@ -1,5 +1,6 @@
 // Mock data for development and testing
 import { AnalyticsData, AutomationRule, Device, User } from '@/types';
+import { generateUUID } from '@/utils';
 
 export const mockDevices: Device[] = [
   {
@@ -71,13 +72,15 @@ export const mockAutomationRules: AutomationRule[] = [
     deviceId: 'device_1',
     conditions: [
       {
+        id: generateUUID(),
         type: 'time',
-        operator: 'greater',
+        operator: '>',
         value: '22:00',
       },
     ],
     actions: [
       {
+        id: generateUUID(),
         type: 'toggle',
         value: 'off',
       },
@@ -91,14 +94,16 @@ export const mockAutomationRules: AutomationRule[] = [
     deviceId: 'device_5',
     conditions: [
       {
+        id: generateUUID(),
         type: 'usage',
-        operator: 'greater',
-        value: 100,
+        operator: '>',
+        value: '100',
         unit: 'W',
       },
     ],
     actions: [
       {
+        id: generateUUID(),
         type: 'notify',
         value: 'High power usage detected',
       },
@@ -112,17 +117,20 @@ export const mockAutomationRules: AutomationRule[] = [
     deviceId: 'device_2',
     conditions: [
       {
+        id: generateUUID(),
         type: 'cost',
-        operator: 'greater',
-        value: 5,
+        operator: '>',
+        value: '5',
       },
     ],
     actions: [
       {
+        id: generateUUID(),
         type: 'toggle',
         value: 'off',
       },
       {
+        id: generateUUID(),
         type: 'notify',
         value: 'Device turned off due to high cost',
       },

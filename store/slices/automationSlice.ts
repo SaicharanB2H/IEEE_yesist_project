@@ -79,7 +79,9 @@ const automationSlice = createSlice({
       })
       .addCase(fetchRules.fulfilled, (state, action) => {
         state.loading = false;
-        state.rules = action.payload;
+        if (action.payload) {
+          state.rules = action.payload;
+        }
       })
       .addCase(fetchRules.rejected, (state, action) => {
         state.loading = false;
@@ -87,13 +89,17 @@ const automationSlice = createSlice({
       })
       // Create rule
       .addCase(createRule.fulfilled, (state, action) => {
-        state.rules.push(action.payload);
+        if (action.payload) {
+          state.rules.push(action.payload);
+        }
       })
       // Update rule
       .addCase(updateRule.fulfilled, (state, action) => {
-        const index = state.rules.findIndex(r => r.id === action.payload.id);
-        if (index !== -1) {
-          state.rules[index] = action.payload;
+        if (action.payload) {
+          const index = state.rules.findIndex(r => r.id === action.payload!.id);
+          if (index !== -1) {
+            state.rules[index] = action.payload;
+          }
         }
       })
       // Delete rule
