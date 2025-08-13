@@ -4,9 +4,12 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import React from 'react';
 import 'react-native-reanimated';
 import { Provider } from 'react-redux';
 import '../global.css';
+// Import Firebase configuration to initialize it
+import '@/config/firebase';
 
 function AppContent() {
   const colorScheme = useColorScheme();
